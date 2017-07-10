@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+    <package name="asd" extends="struts-default">
+        <action name="login" class="controller.TestAction">
+            <result name="success">/WEB-INF/lockv1/inputpwd.jsp</result>
+            <result name="error">/WEB-INF/err.jsp</result>
+        </action>
+
+        <action name="unlock1" class="controller.UnlockAction">
+            <result name="success">/WEB-INF/map.html</result>
+            <result name="error">/WEB-INF/err.jsp</result>
+        </action>
+    </package>
+
+</struts>

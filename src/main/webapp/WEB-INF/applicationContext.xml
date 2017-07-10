@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/lock?useUnicode=true&amp;characterEncoding=UTF8"/>
+        <property name="username" value="root"/>
+        <property name="password" value=""/>
+    </bean>
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="annotatedClasses">
+            <list>
+                <value>entity.LockV1</value>
+                <value>entity.LockV2</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.connection.url">jdbc:mysql://localhost:3306/lock</prop>
+                <prop key="hibernate.connection.driver_class">com.mysql.jdbc.Driver</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- 开启事务注解 -->
+    <tx:annotation-driven proxy-target-class="true" transaction-manager="transactionManager"/>
+
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+
+
+    <bean class="dao.impl.LockV1DaoImpl" id="lockV1Dao">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean class="service.LockV1Service" id="lockV1Service">
+        <property name="lockV1Dao" ref="lockV1Dao"/>
+    </bean>
+
+    <bean class="controller.TestAction" id="testAction">
+        <property name="lockV1Service" ref="lockV1Service"/>
+    </bean>
+
+    <bean id="job" class="uti.PwdChange">
+        <property name="lockV1Service" ref="lockV1Service"/>
+    </bean>
+
+    <!--<bean id="" class="org.springframework.scheduling."-->
+    <bean id="openQuartz1" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="job"/>
+        <property name="targetMethod" value="change"/>
+    </bean>
+
+    <bean id="myTrigger1" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="openQuartz1"/>
+        <property name="cronExpression" value="0 0/1 * * * ?"/>
+    </bean>
+
+
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="jobDetails">
+            <list>
+                <ref bean="openQuartz1"/>
+            </list>
+        </property>
+        <property name="triggers">
+            <list>
+                <ref bean="myTrigger1"/>
+            </list>
+    </property>
+    </bean>
+
+</beans>
