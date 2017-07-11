@@ -7,9 +7,13 @@
 <struts>
 
     <package name="asd" extends="struts-default">
-        <action name="login" class="controller.TestAction">
+        <action name="lock1" class="controller.TurnAction" method="lockV1turn">
             <result name="success">/WEB-INF/lockv1/inputpwd.jsp</result>
             <result name="error">/WEB-INF/err.jsp</result>
+        </action>
+
+        <action name="lock2" class="controller.TurnAction" method="lockV2turn">
+            <result name="success">/WEB-INF/map.html</result>
         </action>
 
         <action name="unlock1" class="controller.UnlockAction">

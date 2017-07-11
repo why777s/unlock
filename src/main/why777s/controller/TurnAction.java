@@ -6,7 +6,7 @@ import service.LockV1Service;
 /**
  * Created by why777s on 2017/7/9.
  */
-public class TestAction extends ActionSupport {
+public class TurnAction extends ActionSupport {
     private String bikeID;
     private LockV1Service lockV1Service;
     public String bikdPWD;
@@ -32,13 +32,15 @@ public class TestAction extends ActionSupport {
     }
 
 
-    @Override
-    public String execute() throws Exception {
+    public String lockV1turn() throws Exception {
         System.out.println("自行车编号:");
         System.out.println(getBikeID());
         System.out.println("自行车密码：");
         setBikdPWD(lockV1Service.getLockV1Pwd(getBikeID()));
         System.out.println(getBikdPWD());
+        return SUCCESS;
+    }
+    public String lockV2turn() throws Exception{
         return SUCCESS;
     }
 }

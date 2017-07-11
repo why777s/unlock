@@ -41,13 +41,23 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
+    <bean class="dao.impl.LockV2DaoImpl" id="lockV2Dao">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
     <bean class="service.LockV1Service" id="lockV1Service">
         <property name="lockV1Dao" ref="lockV1Dao"/>
     </bean>
 
-    <bean class="controller.TestAction" id="testAction">
+    <bean class="service.LockV2Service" id="lockV2Service">
+        <property name="lockV2Dao" ref="lockV2Dao"/>
+    </bean>
+
+
+    <bean class="controller.TurnAction" id="testAction">
         <property name="lockV1Service" ref="lockV1Service"/>
     </bean>
+
 
     <bean id="job" class="uti.PwdChange">
         <property name="lockV1Service" ref="lockV1Service"/>
